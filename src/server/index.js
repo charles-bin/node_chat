@@ -3,8 +3,9 @@
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
-
 const app = express();
+
+var http = require('http').Server(app);
 
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
@@ -19,6 +20,17 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 9000;
 
-app.listen(PORT, () => {
+var server = app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
+});
+
+// socket.io listens on the same HTTP server instance
+var io = require('socket.io').listen(server);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+
+  socket.on('test', () => {
+    console.log('received test message')
+  })
 });

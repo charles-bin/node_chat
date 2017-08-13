@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import './App.css'
 import Messages from '../components/Messages'
 import Input from '../components/Input'
+const io = require('socket.io-client')
 
 class App extends Component {
   constructor(props) {
@@ -14,6 +15,9 @@ class App extends Component {
   componentDidMount() {
     const { dispatch } = this.props
     //dispatch(loadAuthClient())
+    console.log('componentDidMount')
+    const socket = io()
+    socket.emit('test', {})
   }
 
   handleSearchEnter(e) {

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import './App.css'
+import Messages from '../components/Messages'
+import Input from '../components/Input'
 
 class App extends Component {
   constructor(props) {
@@ -24,7 +26,8 @@ class App extends Component {
   render() {
     return (
       <div>
-        <h1>Hello World from the App container!</h1>
+        <Messages />
+        <Input />
       </div>
     )
   }

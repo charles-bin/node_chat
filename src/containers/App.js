@@ -5,6 +5,7 @@ import './App.css'
 import Messages from '../components/Messages'
 import Input from '../components/Input'
 import { initSocket } from '../actions/index'
+import { Panel, Grid, Row, Col } from 'react-bootstrap'
 
 class App extends Component {
   constructor(props) {
@@ -23,16 +24,34 @@ class App extends Component {
     if(e.key === 'Enter') {
       const { socket } = this.props
       socket.emit('chat message', e.target.value)
+      e.target.value = ""
     }
   }
 
   render() {
     const { messages } = this.props
     return (
-      <div>
-        <Messages messages={messages} />
-        <Input onKeyPressEnter={this.onKeyPressEnter} />
-      </div>
+      <Grid>
+        <Col md={6} mdOffset={3} className="full-height">
+          <Panel>
+            <Row className="chat-display">
+              <Col md={12}>
+                <Messages messages={messages} />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <Input
+                  id="sendMessageForm"
+                  type="text"
+                  placeholder=""
+                  onKeyPressEnter={this.onKeyPressEnter}
+                />
+              </Col>
+            </Row>
+          </Panel>
+        </Col>
+      </Grid>
     )
   }
 }

@@ -1,20 +1,18 @@
 import React from 'react'
+import { ListGroup, ListGroupItem } from 'react-bootstrap'
 
 const listStyle = {
-  'listStyleType': 'none',
-  'margin': 0,
-  'padding': 0,
+  'background': '#f5f5f5',
 }
 
 export default function Messages(props) {
   const { messages } = props
   return (
-    <div>
-      <ul style={listStyle}>
-        { messages.map((v, i) => {
-          return <li key={i}>{v}</li>
-        })}
-      </ul>
-    </div>
+    <ListGroup>
+      { messages.map((v, i) => {
+        const style = i % 2 === 0 ? listStyle : {}
+        return <ListGroupItem key={i} style={style}>{v}</ListGroupItem>
+      })}
+    </ListGroup>
   )
 }

@@ -1,2 +1,21 @@
 * {
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root, .container, .panel-body {
+  height: 100%;
+}
+
+.panel {
+  margin-top: 5%;
+  height: 90%;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.chat-display {
+  height: 92%;
 }

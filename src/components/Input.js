@@ -1,11 +1,16 @@
 import React from 'react'
+import { FormGroup, FormControl } from 'react-bootstrap'
 
 export default function Input(props) {
-  const onKeyPressEnter = props.onKeyPressEnter
+  const { id, type, placeholder, onKeyPressEnter } = props
   return (
-    <div>
-      <input onKeyPress={onKeyPressEnter} />
-      <button>Send</button>
-    </div>
+    <FormGroup controlId={id} >
+      <FormControl
+        type={type}
+        placeholder={placeholder}
+        onKeyPress={onKeyPressEnter}
+      />
+      <FormControl.Feedback />
+    </FormGroup>
   )
 }

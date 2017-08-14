@@ -4,48 +4,53 @@ import { connect } from 'react-redux'
 import './App.css'
 import Messages from '../components/Messages'
 import Input from '../components/Input'
-const io = require('socket.io-client')
+import { initSocket } from '../actions/index'
 
 class App extends Component {
   constructor(props) {
     super(props)
-    this.handleSearchEnter = this.handleSearchEnter.bind(this)
+    // Allows { dispatch, socket } = this.props
+    this.onKeyPressEnter = this.onKeyPressEnter.bind(this)
   }
 
   componentDidMount() {
     const { dispatch } = this.props
-    //dispatch(loadAuthClient())
     console.log('componentDidMount')
-    const socket = io()
-    socket.emit('test', {})
+    dispatch(initSocket())
   }
 
-  handleSearchEnter(e) {
+  onKeyPressEnter(e) {
     if(e.key === 'Enter') {
-      const { dispatch } = this.props
-      //dispatch(fetchChannelIfNeeded(e.target.value))
+      const { socket } = this.props
+      socket.emit('chat message', e.target.value)
     }
   }
 
   render() {
+    const { messages } = this.props
     return (
       <div>
-        <Messages />
-        <Input />
+        <Messages messages={messages} />
+        <Input onKeyPressEnter={this.onKeyPressEnter} />
       </div>
     )
   }
 }
 
 App.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  socket: PropTypes.object.isRequired,
+  messages: PropTypes.array.isRequired,
 }
 
 /* By default, the entire state is provided to the AsyncApp component through the prop variable.
   This function can filter/modify the prop values before they reach the component.
 */
 function mapStateToProps(state) {
+  const { receiveSocket, receiveMessage } = state
   return {
-    state
+    socket: receiveSocket,
+    messages: receiveMessage,
   }
 }
 

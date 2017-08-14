@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const express = require('express');
 const morgan = require('morgan');
@@ -27,10 +27,15 @@ var server = app.listen(PORT, () => {
 // socket.io listens on the same HTTP server instance
 var io = require('socket.io').listen(server);
 
-io.on('connection', function(socket){
+io.on('connection', (socket) => {
   console.log('a user connected');
 
-  socket.on('test', () => {
-    console.log('received test message')
-  })
+  socket.on('chat message', (message) => {
+    console.log('received message: ' + message);
+    io.emit('chat message', message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('a user disconnected');
+  });
 });

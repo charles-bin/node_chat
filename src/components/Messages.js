@@ -1,18 +1,19 @@
 import React from 'react'
 
 const listStyle = {
-  'list-style-type': 'none',
+  'listStyleType': 'none',
   'margin': 0,
   'padding': 0,
 }
 
 export default function Messages(props) {
+  const { messages } = props
   return (
     <div>
       <ul style={listStyle}>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
+        { messages.map((v, i) => {
+          return <li key={i}>{v}</li>
+        })}
       </ul>
     </div>
   )

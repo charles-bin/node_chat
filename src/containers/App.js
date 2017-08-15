@@ -21,7 +21,7 @@ class App extends Component {
   }
 
   onKeyPressEnter(e) {
-    if(e.key === 'Enter') {
+    if(e.key === 'Enter' && !e.target.value.match(/^\s*$/)) {
       const { dispatch, socket } = this.props
       dispatch(appendMessage(e.target.value))
       socket.emit('chat message', e.target.value)

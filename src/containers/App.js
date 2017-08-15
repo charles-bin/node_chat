@@ -20,6 +20,11 @@ class App extends Component {
     dispatch(initSocket())
   }
 
+  componentDidUpdate() {
+    var element = document.getElementById("chat-display");
+    element.scrollTop = element.scrollHeight;
+  }
+
   onKeyPressEnter(e) {
     if(e.key === 'Enter' && !e.target.value.match(/^\s*$/)) {
       const { dispatch, socket } = this.props
@@ -35,7 +40,7 @@ class App extends Component {
       <Grid>
         <Col md={6} mdOffset={3} className="full-height">
           <Panel>
-            <Row className="chat-display">
+            <Row id="chat-display">
               <Col md={12}>
                 <Messages messages={messages} />
               </Col>

@@ -16,6 +16,10 @@ html, body, #root, .container, .panel-body {
   height: 100%;
 }
 
-.chat-display {
-  height: 92%;
+#chat-display {
+  margin: auto;
+  margin-bottom: 3%;
+  height: 90%;
+  overflow-y: scroll;
+  overflow-wrap: break-word;
 }

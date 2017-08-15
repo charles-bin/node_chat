@@ -20,7 +20,7 @@ function registerSocket(socket) {
   }
 }
 
-function appendMessage(message) {
+export function appendMessage(message) {
   return {
     type: APPEND_MESSAGE,
     message

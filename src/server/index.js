@@ -14,7 +14,7 @@ app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:htt
 app.use(express.static(path.resolve(__dirname, '..', '..', 'build')))
 
 // Always return the main index.html, so react-router render the route in the client
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
 })
 
@@ -29,13 +29,15 @@ var io = require('socket.io').listen(server)
 
 io.on('connection', (socket) => {
   console.log('a user connected')
+  io.emit('chat message', "A user has connected")
 
   socket.on('chat message', (message) => {
     console.log('received message: ' + message)
-    io.emit('chat message', message)
+    socket.broadcast.emit('chat message', message)
   })
 
   socket.on('disconnect', () => {
     console.log('a user disconnected')
+    io.emit('chat message', "A user has disconnected")
   })
 })

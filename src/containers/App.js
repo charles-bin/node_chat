@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import './App.css'
 import Messages from '../components/Messages'
 import Input from '../components/Input'
-import { initSocket } from '../actions/index'
+import { initSocket, appendMessage } from '../actions/index'
 import { Panel, Grid, Row, Col } from 'react-bootstrap'
 
 class App extends Component {
@@ -22,7 +22,8 @@ class App extends Component {
 
   onKeyPressEnter(e) {
     if(e.key === 'Enter') {
-      const { socket } = this.props
+      const { dispatch, socket } = this.props
+      dispatch(appendMessage(e.target.value))
       socket.emit('chat message', e.target.value)
       e.target.value = ""
     }

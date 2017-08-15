@@ -1,41 +1,41 @@
-'use strict';
+'use strict'
 
-const express = require('express');
-const morgan = require('morgan');
-const path = require('path');
-const app = express();
+const express = require('express')
+const morgan = require('morgan')
+const path = require('path')
+const app = express()
 
-var http = require('http').Server(app);
+var http = require('http').Server(app)
 
 // Setup logger
-app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
+app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'))
 
 // Serve static assets
-app.use(express.static(path.resolve(__dirname, '..', '..', 'build')));
+app.use(express.static(path.resolve(__dirname, '..', '..', 'build')))
 
 // Always return the main index.html, so react-router render the route in the client
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', '..', 'build', 'index.html'));
-});
+  res.sendFile(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
+})
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 9000
 
 var server = app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}!`);
-});
+  console.log(`App listening on port ${PORT}!`)
+})
 
 // socket.io listens on the same HTTP server instance
-var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server)
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log('a user connected')
 
   socket.on('chat message', (message) => {
-    console.log('received message: ' + message);
-    io.emit('chat message', message);
-  });
+    console.log('received message: ' + message)
+    io.emit('chat message', message)
+  })
 
   socket.on('disconnect', () => {
-    console.log('a user disconnected');
-  });
-});
+    console.log('a user disconnected')
+  })
+})

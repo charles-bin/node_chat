@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import './App.css'
 import Messages from '../components/Messages'
 import Input from '../components/Input'
+import Username from '../components/Username'
 import { initSocket, appendMessage } from '../actions/index'
 import { Panel, Grid, Row, Col } from 'react-bootstrap'
 
@@ -11,7 +12,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     // Allows { dispatch, socket } = this.props
-    this.onKeyPressEnter = this.onKeyPressEnter.bind(this)
+    this.handleSendMessage = this.handleSendMessage.bind(this)
   }
 
   componentDidMount() {
@@ -23,9 +24,12 @@ class App extends Component {
   componentDidUpdate() {
     var element = document.getElementById("chat-display");
     element.scrollTop = element.scrollHeight;
+    if (this.inputElement !== null) {
+      this.inputElement.focus()
+    }
   }
 
-  onKeyPressEnter(e) {
+  handleSendMessage(e) {
     if(e.key === 'Enter' && !e.target.value.match(/^\s*$/)) {
       const { dispatch, socket } = this.props
       dispatch(appendMessage(e.target.value))
@@ -35,10 +39,11 @@ class App extends Component {
   }
 
   render() {
-    const { messages } = this.props
+    const { dispatch, messages, username } = this.props
     return (
       <Grid>
         <Col md={6} mdOffset={3} className="full-height">
+          <Username dispatch={dispatch} username={username} />
           <Panel>
             <Row id="chat-display">
               <Col md={12}>
@@ -51,7 +56,8 @@ class App extends Component {
                   id="sendMessageForm"
                   type="text"
                   placeholder=""
-                  onKeyPressEnter={this.onKeyPressEnter}
+                  onKeyPress={this.handleSendMessage}
+                  inputRef={input => this.inputElement = input}
                 />
               </Col>
             </Row>
@@ -66,16 +72,18 @@ App.propTypes = {
   dispatch: PropTypes.func.isRequired,
   socket: PropTypes.object.isRequired,
   messages: PropTypes.array.isRequired,
+  username: PropTypes.string.isRequired,
 }
 
 /* By default, the entire state is provided to the AsyncApp component through the prop variable.
   This function can filter/modify the prop values before they reach the component.
 */
 function mapStateToProps(state) {
-  const { receiveSocket, receiveMessage } = state
+  const { receiveSocket, receiveMessage, username } = state
   return {
     socket: receiveSocket,
     messages: receiveMessage,
+    username: username,
   }
 }
 

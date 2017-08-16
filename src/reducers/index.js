@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 import {
   REGISTER_SOCKET,
   APPEND_MESSAGE,
+  SET_USERNAME,
 } from '../actions/index'
 
 function receiveSocket(state={}, action) {
@@ -23,9 +24,19 @@ function receiveMessage(state=[], action) {
   }
 }
 
+function username(state='', action) {
+  switch (action.type) {
+    case SET_USERNAME:
+      return action.username
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers({
   receiveSocket,
   receiveMessage,
+  username,
 })
 
 export default rootReducer

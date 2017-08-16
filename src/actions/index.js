@@ -1,5 +1,6 @@
 export const REGISTER_SOCKET = 'REGISTER_SOCKET'
 export const APPEND_MESSAGE = 'APPEND_MESSAGE'
+export const SET_USERNAME = 'SET_USERNAME'
 
 export function initSocket() {
   return dispatch => {
@@ -24,5 +25,12 @@ export function appendMessage(message) {
   return {
     type: APPEND_MESSAGE,
     message
+  }
+}
+
+export function setUsername(username) {
+  return {
+    type: SET_USERNAME,
+    username
   }
 }

@@ -28,16 +28,18 @@ var server = app.listen(PORT, () => {
 var io = require('socket.io').listen(server)
 
 io.on('connection', (socket) => {
-  console.log('a user connected')
-  io.emit('chat message', "A user has connected")
+  const user = socket.handshake.query.username
+  console.log(user + ' has connected')
 
-  socket.on('chat message', (message) => {
-    console.log('received message: ' + message)
-    socket.broadcast.emit('chat message', message)
+  io.emit('user update', user + " has connected")
+
+  socket.on('chat message', (username, message) => {
+    console.log(username + ': ' + message)
+    socket.broadcast.emit('chat message', username, message)
   })
 
   socket.on('disconnect', () => {
-    console.log('a user disconnected')
-    io.emit('chat message', "A user has disconnected")
+    console.log(user + ' has disconnected')
+    io.emit('user update', user + " has disconnected")
   })
 })

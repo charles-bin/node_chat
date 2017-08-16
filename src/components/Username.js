@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import Input from './Input'
-import { setUsername } from '../actions/index'
+import { initUser } from '../actions/index'
 
 export default class Username extends Component {
 
@@ -20,7 +20,7 @@ export default class Username extends Component {
   handleEnterUsername(e) {
     if (e.key === 'Enter' && !e.target.value.match(/^\s*$/)) {
       const { dispatch } = this.props
-      dispatch(setUsername(e.target.value))
+      dispatch(initUser(e.target.value))
     }
   }
 
@@ -28,14 +28,14 @@ export default class Username extends Component {
     const e = this.inputElement
     if (!e.value.match(/^\s*$/)) {
       const { dispatch } = this.props
-      dispatch(setUsername(e.value))
+      dispatch(initUser(e.value))
     }
   }
 
   render() {
     const { username } = this.props
     return (
-      <Modal show={username === ''}>
+      <Modal bsSize="small" show={username === ''}>
         <Modal.Header>
           <Modal.Title>Enter Username</Modal.Title>
         </Modal.Header>

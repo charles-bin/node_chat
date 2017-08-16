@@ -5,7 +5,7 @@ import './App.css'
 import Messages from '../components/Messages'
 import Input from '../components/Input'
 import Username from '../components/Username'
-import { initSocket, appendMessage } from '../actions/index'
+import { appendMessage } from '../actions/index'
 import { Panel, Grid, Row, Col } from 'react-bootstrap'
 
 class App extends Component {
@@ -16,9 +16,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
+    //const { dispatch, username } = this.props
     console.log('componentDidMount')
-    dispatch(initSocket())
   }
 
   componentDidUpdate() {
@@ -30,10 +29,11 @@ class App extends Component {
   }
 
   handleSendMessage(e) {
+    const { username } = this.props
     if(e.key === 'Enter' && !e.target.value.match(/^\s*$/)) {
       const { dispatch, socket } = this.props
-      dispatch(appendMessage(e.target.value))
-      socket.emit('chat message', e.target.value)
+      dispatch(appendMessage(username + ': ' + e.target.value))
+      socket.emit('chat message', username, e.target.value)
       e.target.value = ""
     }
   }

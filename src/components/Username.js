@@ -11,9 +11,10 @@ export default class Username extends Component {
     this.handleSubmitUsername = this.handleSubmitUsername.bind(this)
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     if (this.inputElement !== null) {
       this.inputElement.focus()
+      window.userel = this.inputElement
     }
   }
 

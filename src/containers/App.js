@@ -17,14 +17,22 @@ class App extends Component {
 
   componentDidMount() {
     //const { dispatch, username } = this.props
-    console.log('componentDidMount')
+    console.log('App.componentDidMount')
   }
 
   componentDidUpdate() {
+    console.log('App.componentDidUpdate')
     var element = document.getElementById("chat-display");
     element.scrollTop = element.scrollHeight;
     if (this.inputElement !== null) {
-      this.inputElement.focus()
+      /*
+        Must use arrow function here because a regular function's "this" will
+        get bound to the window object upon execution. The arrow function's
+        "this" will get bound to enclosing App object with the inputElement.
+      */
+      window.setTimeout(() => {
+        this.inputElement.focus()
+      }, 200)
     }
   }
 
@@ -39,6 +47,7 @@ class App extends Component {
   }
 
   render() {
+    console.log("App.render")
     const { dispatch, messages, username } = this.props
     return (
       <Grid>

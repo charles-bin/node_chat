@@ -8,7 +8,7 @@ const listStyle = {
 export default function Messages(props) {
   const { messages } = props
   return (
-    <ListGroup>
+    <ListGroup style={{'marginBottom': 0}}>
       { messages.map((v, i) => {
         const style = i % 2 === 0 ? listStyle : {}
         return <ListGroupItem key={i} style={style}>{v}</ListGroupItem>

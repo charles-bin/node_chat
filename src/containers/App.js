@@ -7,7 +7,7 @@ import Input from '../components/Input'
 import Username from '../components/Username'
 import Users from '../components/Users'
 import { appendMessage } from '../actions/index'
-import { Panel, Grid, Row, Col } from 'react-bootstrap'
+import { Panel, Grid, Row, Col, Tab, Tabs } from 'react-bootstrap'
 
 class App extends Component {
   constructor(props) {
@@ -23,8 +23,11 @@ class App extends Component {
 
   componentDidUpdate() {
     console.log('App.componentDidUpdate')
-    var element = document.getElementById("chat-display");
-    element.scrollTop = element.scrollHeight;
+
+    const messageTabs = document.getElementById("message-tabs")
+    const tabContent = messageTabs.getElementsByClassName("tab-content")[0]
+    tabContent.scrollTop = tabContent.scrollHeight;
+
     if (this.inputElement !== null) {
       /*
         Must use arrow function here because a regular function's "this" will
@@ -62,9 +65,11 @@ class App extends Component {
         >
           <Panel>
             <Row id="chat-display">
-              <Col md={12}>
-                <Messages messages={messages} />
-              </Col>
+              <Tabs defaultActiveKey={1} id="message-tabs">
+                <Tab eventKey={1} title="Tab 1"><Messages messages={messages} /></Tab>
+                <Tab eventKey={2} title="Tab 2"><Messages messages={messages} /></Tab>
+                <Tab eventKey={3} title="Tab 3"><Messages messages={messages} /></Tab>
+              </Tabs>
             </Row>
             <Row>
               <Col md={12}>

@@ -8,12 +8,18 @@ html, body, #root, .container, .panel-body {
 }
 
 .panel {
-  margin-top: 5%;
+  position: absolute;
+  top: 5%;
   height: 90%;
+  width: 95%;
 }
 
 .full-height {
   height: 100%;
+}
+
+#user-list {
+  width: auto;
 }
 
 #chat-display {

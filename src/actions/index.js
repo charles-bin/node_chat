@@ -1,6 +1,7 @@
 export const REGISTER_SOCKET = 'REGISTER_SOCKET'
 export const APPEND_MESSAGE = 'APPEND_MESSAGE'
 export const SET_USERNAME = 'SET_USERNAME'
+export const SET_USERLIST = 'SET_USERLIST'
 
 export function initSocket(username) {
   return dispatch => {
@@ -18,6 +19,10 @@ export function initSocket(username) {
 
     socket.on('user update', (message) => {
       dispatch(appendMessage(message))
+    })
+
+    socket.on('user list', (userList) => {
+      dispatch(setUserList(userList))
     })
   }
 }
@@ -47,5 +52,12 @@ function setUsername(username) {
   return {
     type: SET_USERNAME,
     username
+  }
+}
+
+export function setUserList(userList) {
+  return {
+    type: SET_USERLIST,
+    userList
   }
 }

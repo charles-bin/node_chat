@@ -4,6 +4,7 @@ import {
   REGISTER_SOCKET,
   APPEND_MESSAGE,
   SET_USERNAME,
+  SET_USERLIST,
 } from '../actions/index'
 
 function receiveSocket(state={}, action) {
@@ -33,10 +34,20 @@ function username(state='', action) {
   }
 }
 
+function userList(state=[], action) {
+  switch (action.type) {
+    case SET_USERLIST:
+      return action.userList
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers({
   receiveSocket,
   receiveMessage,
   username,
+  userList,
 })
 
 export default rootReducer

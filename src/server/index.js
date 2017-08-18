@@ -24,14 +24,18 @@ var server = app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`)
 })
 
+var userList = {}
+
 // socket.io listens on the same HTTP server instance
 var io = require('socket.io').listen(server)
 
 io.on('connection', (socket) => {
   const user = socket.handshake.query.username
+  userList[user] = true
   console.log(user + ' has connected')
 
   io.emit('user update', user + " has connected")
+  io.emit('user list', Object.keys(userList))
 
   socket.on('chat message', (username, message) => {
     console.log(username + ': ' + message)
@@ -39,7 +43,9 @@ io.on('connection', (socket) => {
   })
 
   socket.on('disconnect', () => {
+    delete userList[user]
     console.log(user + ' has disconnected')
     io.emit('user update', user + " has disconnected")
+    io.emit('user list', Object.keys(userList))
   })
 })

@@ -5,6 +5,7 @@ import './App.css'
 import Messages from '../components/Messages'
 import Input from '../components/Input'
 import Username from '../components/Username'
+import Users from '../components/Users'
 import { appendMessage } from '../actions/index'
 import { Panel, Grid, Row, Col } from 'react-bootstrap'
 
@@ -48,11 +49,17 @@ class App extends Component {
 
   render() {
     console.log("App.render")
-    const { dispatch, messages, username } = this.props
+    const { dispatch, messages, username, userList } = this.props
     return (
       <Grid>
-        <Col md={6} mdOffset={3} className="full-height">
-          <Username dispatch={dispatch} username={username} />
+        <Username dispatch={dispatch} username={username} />
+        <Col
+          lg={7} lgOffset={2}
+          md={7} mdOffset={1}
+          sm={7} smOffset={0}
+          xs={7} xsOffset={0}
+          className="full-height"
+        >
           <Panel>
             <Row id="chat-display">
               <Col md={12}>
@@ -72,6 +79,17 @@ class App extends Component {
             </Row>
           </Panel>
         </Col>
+        <Col
+          lg={2}
+          md={3}
+          sm={3}
+          xs={3}
+          className="full-height"
+        >
+          <Panel id="user-list">
+            <Users userList={userList}/>
+          </Panel>
+        </Col>
       </Grid>
     )
   }
@@ -82,17 +100,19 @@ App.propTypes = {
   socket: PropTypes.object.isRequired,
   messages: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
+  userList: PropTypes.array.isRequired,
 }
 
 /* By default, the entire state is provided to the AsyncApp component through the prop variable.
   This function can filter/modify the prop values before they reach the component.
 */
 function mapStateToProps(state) {
-  const { receiveSocket, receiveMessage, username } = state
+  const { receiveSocket, receiveMessage, username, userList } = state
   return {
     socket: receiveSocket,
     messages: receiveMessage,
     username: username,
+    userList: userList,
   }
 }
 

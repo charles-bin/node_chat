@@ -6,7 +6,7 @@ import Messages from '../components/Messages'
 import Input from '../components/Input'
 import Username from '../components/Username'
 import Users from '../components/Users'
-import { appendMessage } from '../actions/index'
+import { appendMessage, MESSAGE_TYPE_CHAT } from '../actions/index'
 import { Panel, Grid, Row, Col, Tab, Tabs } from 'react-bootstrap'
 
 class App extends Component {
@@ -44,7 +44,7 @@ class App extends Component {
     const { username } = this.props
     if(e.key === 'Enter' && !e.target.value.match(/^\s*$/)) {
       const { dispatch, socket } = this.props
-      dispatch(appendMessage(username + ': ' + e.target.value))
+      dispatch(appendMessage(username, e.target.value, MESSAGE_TYPE_CHAT))
       socket.emit('chat message', username, e.target.value)
       e.target.value = ""
     }
@@ -52,7 +52,7 @@ class App extends Component {
 
   render() {
     console.log("App.render")
-    const { dispatch, messages, username, userList } = this.props
+    const { dispatch, messages, username, userList, chats } = this.props
     return (
       <Grid>
         <Username dispatch={dispatch} username={username} />
@@ -65,10 +65,17 @@ class App extends Component {
         >
           <Panel>
             <Row id="chat-display">
-              <Tabs defaultActiveKey={1} id="message-tabs">
-                <Tab eventKey={1} title="Tab 1"><Messages messages={messages} /></Tab>
-                <Tab eventKey={2} title="Tab 2"><Messages messages={messages} /></Tab>
-                <Tab eventKey={3} title="Tab 3"><Messages messages={messages} /></Tab>
+              <Tabs defaultActiveKey={0} id="message-tabs">
+                <Tab key={0} eventKey={0} title="General">
+                  <Messages messages={messages} />
+                </Tab>
+                { chats.map((user, i) => {
+                  return (
+                    <Tab key={i+1} eventKey={i+1} title={user}>
+                      <Messages messages={messages.filter(m => m.username === user)} />
+                    </Tab>
+                  )
+                })}
               </Tabs>
             </Row>
             <Row>
@@ -106,18 +113,20 @@ App.propTypes = {
   messages: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
   userList: PropTypes.array.isRequired,
+  chats: PropTypes.array.isRequired,
 }
 
 /* By default, the entire state is provided to the AsyncApp component through the prop variable.
   This function can filter/modify the prop values before they reach the component.
 */
 function mapStateToProps(state) {
-  const { receiveSocket, receiveMessage, username, userList } = state
+  const { receiveSocket, receiveMessage, username, userList, chats } = state
   return {
     socket: receiveSocket,
     messages: receiveMessage,
     username: username,
     userList: userList,
+    chats: chats,
   }
 }
 

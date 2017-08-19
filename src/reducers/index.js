@@ -19,7 +19,11 @@ function receiveSocket(state={}, action) {
 function receiveMessage(state=[], action) {
   switch (action.type) {
     case APPEND_MESSAGE:
-      return state.concat(action.message)
+      return state.concat({
+        username: action.username,
+        message: action.message,
+        type: action.messageType,
+      })
     default:
       return state
   }
@@ -43,11 +47,19 @@ function userList(state=[], action) {
   }
 }
 
+function chats(state=[], action) {
+  switch (action.type) {
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers({
   receiveSocket,
   receiveMessage,
   username,
   userList,
+  chats,
 })
 
 export default rootReducer

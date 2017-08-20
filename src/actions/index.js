@@ -1,10 +1,15 @@
+import {
+  GENERAL_MESSAGE,
+  PRIVATE_MESSAGE,
+  SERVER_MESSAGE,
+  USERLIST_UPDATE,
+  createMessage,
+} from '../socketAPI'
+
 export const REGISTER_SOCKET = 'REGISTER_SOCKET'
 export const APPEND_MESSAGE = 'APPEND_MESSAGE'
 export const SET_USERNAME = 'SET_USERNAME'
 export const SET_USERLIST = 'SET_USERLIST'
-
-export const MESSAGE_TYPE_CHAT = 'MESSAGE_TYPE_CHAT'
-export const MESSAGE_TYPE_UPDATE = 'MESSAGE_TYPE_UPDATE'
 
 export function initSocket(username) {
   return dispatch => {
@@ -16,15 +21,15 @@ export function initSocket(username) {
     })
     dispatch(registerSocket(socket))
 
-    socket.on('chat message', (username, message) => {
-      dispatch(appendMessage(username, message, MESSAGE_TYPE_CHAT))
+    socket.on(GENERAL_MESSAGE, (message) => {
+      dispatch(appendMessage(message))
     })
 
-    socket.on('user update', (username, message) => {
-      dispatch(appendMessage(username, message, MESSAGE_TYPE_UPDATE))
+    socket.on(SERVER_MESSAGE, (message) => {
+      dispatch(appendMessage(message))
     })
 
-    socket.on('user list', (userList) => {
+    socket.on(USERLIST_UPDATE, (userList) => {
       dispatch(setUserList(userList))
     })
   }
@@ -37,12 +42,10 @@ function registerSocket(socket) {
   }
 }
 
-export function appendMessage(username, message, messageType) {
+export function appendMessage(message) {
   return {
     type: APPEND_MESSAGE,
-    username,
     message,
-    messageType,
   }
 }
 

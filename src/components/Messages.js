@@ -1,6 +1,6 @@
 import React from 'react'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
-import { MESSAGE_TYPE_CHAT, MESSAGE_TYPE_UPDATE } from '../actions/index'
+import { GENERAL_MESSAGE, PRIVATE_MESSAGE, SERVER_MESSAGE } from '../socketAPI'
 
 const listStyle = {
   'background': '#f5f5f5',
@@ -14,7 +14,7 @@ export default function Messages(props) {
         const style = i % 2 === 0 ? listStyle : {}
         return (
           <ListGroupItem key={i} style={style}>
-            { m.type === MESSAGE_TYPE_CHAT ? m.username + ": " + m.message : m.message}
+            { m.messageType === SERVER_MESSAGE ? m.body : m.from + ": " + m.body }
           </ListGroupItem>
         )
       })}

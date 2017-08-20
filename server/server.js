@@ -1,4 +1,9 @@
-'use strict'
+const api = require('../src/socketAPI')
+const GENERAL_MESSAGE = api.GENERAL_MESSAGE
+const PRIVATE_MESSAGE = api.PRIVATE_MESSAGE
+const SERVER_MESSAGE = api.SERVER_MESSAGE
+const USERLIST_UPDATE = api.USERLIST_UPDATE
+const createMessage = api.createMessage
 
 const express = require('express')
 const morgan = require('morgan')
@@ -11,11 +16,12 @@ var http = require('http').Server(app)
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'))
 
 // Serve static assets
-app.use(express.static(path.resolve(__dirname, '..', '..', 'build')))
+console.log(__dirname)
+app.use(express.static(path.resolve(__dirname, '..', 'build')))
 
 // Always return the main index.html, so react-router render the route in the client
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
+  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'))
 })
 
 const PORT = process.env.PORT || 9000
@@ -31,21 +37,22 @@ var io = require('socket.io').listen(server)
 
 io.on('connection', (socket) => {
   const user = socket.handshake.query.username
-  userList[user] = true
+  userList[user] = socket
   console.log(user + ' has connected')
 
-  io.emit('user update', user + " has connected")
-  io.emit('user list', Object.keys(userList))
+  io.emit(SERVER_MESSAGE, createMessage(user, user + " has connected", SERVER_MESSAGE))
+  io.emit(USERLIST_UPDATE, Object.keys(userList))
 
-  socket.on('chat message', (username, message) => {
-    console.log(username + ': ' + message)
-    socket.broadcast.emit('chat message', username, message)
+  socket.on(GENERAL_MESSAGE, (message) => {
+    console.log(message)
+    socket.broadcast.emit(GENERAL_MESSAGE, message)
   })
 
   socket.on('disconnect', () => {
     delete userList[user]
     console.log(user + ' has disconnected')
-    io.emit('user update', user + " has disconnected")
-    io.emit('user list', Object.keys(userList))
+
+    io.emit(SERVER_MESSAGE, createMessage(user, user + " has disconnected", SERVER_MESSAGE))
+    io.emit(USERLIST_UPDATE, Object.keys(userList))
   })
 })

@@ -6,7 +6,8 @@ import Messages from '../components/Messages'
 import Input from '../components/Input'
 import Username from '../components/Username'
 import Users from '../components/Users'
-import { appendMessage, MESSAGE_TYPE_CHAT } from '../actions/index'
+import { appendMessage } from '../actions/index'
+import { createMessage, GENERAL_MESSAGE } from '../socketAPI'
 import { Panel, Grid, Row, Col, Tab, Tabs } from 'react-bootstrap'
 
 class App extends Component {
@@ -44,8 +45,9 @@ class App extends Component {
     const { username } = this.props
     if(e.key === 'Enter' && !e.target.value.match(/^\s*$/)) {
       const { dispatch, socket } = this.props
-      dispatch(appendMessage(username, e.target.value, MESSAGE_TYPE_CHAT))
-      socket.emit('chat message', username, e.target.value)
+      const message = createMessage(username, e.target.value, GENERAL_MESSAGE)
+      dispatch(appendMessage(message))
+      socket.emit(GENERAL_MESSAGE, message)
       e.target.value = ""
     }
   }
@@ -72,7 +74,10 @@ class App extends Component {
                 { chats.map((user, i) => {
                   return (
                     <Tab key={i+1} eventKey={i+1} title={user}>
-                      <Messages messages={messages.filter(m => m.username === user)} />
+                      <Messages messages={
+                        messages.filter(
+                          m => m.to === user || (m.from === user && m.to === username))
+                      } />
                     </Tab>
                   )
                 })}

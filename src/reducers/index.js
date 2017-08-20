@@ -19,11 +19,7 @@ function receiveSocket(state={}, action) {
 function receiveMessage(state=[], action) {
   switch (action.type) {
     case APPEND_MESSAGE:
-      return state.concat({
-        username: action.username,
-        message: action.message,
-        type: action.messageType,
-      })
+      return state.concat(action.message)
     default:
       return state
   }

@@ -7,13 +7,21 @@ const listStyle = {
 }
 
 export default function Users(props) {
-  const { userList } = props
+  const { userList, createItemClickHandler } = props
   return (
     <div>
       <h4 style={{'whiteSpace': 'nowrap'}}>Online Users <Badge>{userList.length}</Badge></h4>
       <ListGroup>
         { userList.map((user, i) => {
-          return <ListGroupItem key={i} style={listStyle}>{user}</ListGroupItem>
+          const handleItemClick = createItemClickHandler(user)
+          return (
+            <ListGroupItem
+              key={i}
+              style={listStyle}
+              onClick={handleItemClick}>
+              {user}
+            </ListGroupItem>
+          )
         })}
       </ListGroup>
     </div>

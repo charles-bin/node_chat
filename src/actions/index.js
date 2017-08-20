@@ -10,6 +10,8 @@ export const REGISTER_SOCKET = 'REGISTER_SOCKET'
 export const APPEND_MESSAGE = 'APPEND_MESSAGE'
 export const SET_USERNAME = 'SET_USERNAME'
 export const SET_USERLIST = 'SET_USERLIST'
+export const SET_CURRENT_TAB = 'SET_CURRENT_TAB'
+export const ADD_CHAT_TAB = 'ADD_CHAT_TAB'
 
 export function initSocket(username) {
   return dispatch => {
@@ -67,5 +69,19 @@ export function setUserList(userList) {
   return {
     type: SET_USERLIST,
     userList
+  }
+}
+
+export function setCurrentTab(key) {
+  return {
+    type: SET_CURRENT_TAB,
+    key
+  }
+}
+
+export function addChatTab(user) {
+  return {
+    type: ADD_CHAT_TAB,
+    user
   }
 }

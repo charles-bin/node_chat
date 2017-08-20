@@ -5,6 +5,8 @@ import {
   APPEND_MESSAGE,
   SET_USERNAME,
   SET_USERLIST,
+  SET_CURRENT_TAB,
+  ADD_CHAT_TAB,
 } from '../actions/index'
 
 function receiveSocket(state={}, action) {
@@ -45,6 +47,17 @@ function userList(state=[], action) {
 
 function chats(state=[], action) {
   switch (action.type) {
+    case ADD_CHAT_TAB:
+      return state.concat(action.user)
+    default:
+      return state
+  }
+}
+
+function currentTab(state='General', action) {
+  switch (action.type) {
+    case SET_CURRENT_TAB:
+      return action.key
     default:
       return state
   }
@@ -56,6 +69,7 @@ const rootReducer = combineReducers({
   username,
   userList,
   chats,
+  currentTab,
 })
 
 export default rootReducer

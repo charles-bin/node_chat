@@ -6,8 +6,8 @@ import Messages from '../components/Messages'
 import Input from '../components/Input'
 import Username from '../components/Username'
 import Users from '../components/Users'
-import { appendMessage } from '../actions/index'
-import { createMessage, GENERAL_MESSAGE } from '../socketAPI'
+import { appendMessage, setCurrentTab, addChatTab } from '../actions/index'
+import { createMessage, GENERAL_MESSAGE, PRIVATE_MESSAGE } from '../socketAPI'
 import { Panel, Grid, Row, Col, Tab, Tabs } from 'react-bootstrap'
 
 class App extends Component {
@@ -15,6 +15,8 @@ class App extends Component {
     super(props)
     // Allows { dispatch, socket } = this.props
     this.handleSendMessage = this.handleSendMessage.bind(this)
+    this.handleTabSelect = this.handleTabSelect.bind(this)
+    this.createItemClickHandler = this.createItemClickHandler.bind(this)
   }
 
   componentDidMount() {
@@ -44,17 +46,34 @@ class App extends Component {
   handleSendMessage(e) {
     const { username } = this.props
     if(e.key === 'Enter' && !e.target.value.match(/^\s*$/)) {
-      const { dispatch, socket } = this.props
-      const message = createMessage(username, e.target.value, GENERAL_MESSAGE)
+      const { dispatch, socket, currentTab } = this.props
+      const message = (
+        currentTab === 'General'
+          ? createMessage(username, e.target.value, GENERAL_MESSAGE)
+          : createMessage(username, e.target.value, PRIVATE_MESSAGE, currentTab)
+      )
       dispatch(appendMessage(message))
-      socket.emit(GENERAL_MESSAGE, message)
+      socket.emit(currentTab === 'General' ? GENERAL_MESSAGE : PRIVATE_MESSAGE, message)
       e.target.value = ""
+    }
+  }
+
+  handleTabSelect(key) {
+    const { dispatch } = this.props
+    dispatch(setCurrentTab(key))
+  }
+
+  createItemClickHandler(user) {
+    const { dispatch } = this.props
+    return () => {
+      dispatch(addChatTab(user))
+      dispatch(setCurrentTab(user))
     }
   }
 
   render() {
     console.log("App.render")
-    const { dispatch, messages, username, userList, chats } = this.props
+    const { dispatch, messages, username, userList, chats, currentTab } = this.props
     return (
       <Grid>
         <Username dispatch={dispatch} username={username} />
@@ -67,13 +86,13 @@ class App extends Component {
         >
           <Panel>
             <Row id="chat-display">
-              <Tabs defaultActiveKey={0} id="message-tabs">
-                <Tab key={0} eventKey={0} title="General">
+              <Tabs activeKey={currentTab} onSelect={this.handleTabSelect} id="message-tabs">
+                <Tab key="General" eventKey="General" title="General">
                   <Messages messages={messages} />
                 </Tab>
                 { chats.map((user, i) => {
                   return (
-                    <Tab key={i+1} eventKey={i+1} title={user}>
+                    <Tab key={user} eventKey={user} title={user}>
                       <Messages messages={
                         messages.filter(
                           m => m.to === user || (m.from === user && m.to === username))
@@ -104,7 +123,10 @@ class App extends Component {
           className="full-height"
         >
           <Panel id="user-list">
-            <Users userList={userList}/>
+            <Users
+              userList={userList}
+              createItemClickHandler={this.createItemClickHandler}
+            />
           </Panel>
         </Col>
       </Grid>
@@ -119,19 +141,29 @@ App.propTypes = {
   username: PropTypes.string.isRequired,
   userList: PropTypes.array.isRequired,
   chats: PropTypes.array.isRequired,
+  currentTab: PropTypes.string.isRequired,
 }
 
 /* By default, the entire state is provided to the AsyncApp component through the prop variable.
   This function can filter/modify the prop values before they reach the component.
 */
 function mapStateToProps(state) {
-  const { receiveSocket, receiveMessage, username, userList, chats } = state
+  const {
+    receiveSocket,
+    receiveMessage,
+    username,
+    userList,
+    chats,
+    currentTab,
+  } = state
+
   return {
     socket: receiveSocket,
     messages: receiveMessage,
-    username: username,
-    userList: userList,
-    chats: chats,
+    username,
+    userList,
+    chats,
+    currentTab,
   }
 }
 

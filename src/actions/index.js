@@ -12,6 +12,7 @@ export const SET_USERNAME = 'SET_USERNAME'
 export const SET_USERLIST = 'SET_USERLIST'
 export const SET_CURRENT_TAB = 'SET_CURRENT_TAB'
 export const ADD_CHAT_TAB = 'ADD_CHAT_TAB'
+export const REMOVE_CHAT_TAB = 'REMOVE_CHAT_TAB'
 
 export function initSocket(username) {
   return dispatch => {
@@ -82,6 +83,13 @@ export function setCurrentTab(key) {
 export function addChatTab(user) {
   return {
     type: ADD_CHAT_TAB,
+    user
+  }
+}
+
+export function removeChatTab(user) {
+  return {
+    type: REMOVE_CHAT_TAB,
     user
   }
 }

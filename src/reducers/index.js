@@ -7,6 +7,7 @@ import {
   SET_USERLIST,
   SET_CURRENT_TAB,
   ADD_CHAT_TAB,
+  REMOVE_CHAT_TAB,
 } from '../actions/index'
 
 function receiveSocket(state={}, action) {
@@ -49,6 +50,8 @@ function chats(state=[], action) {
   switch (action.type) {
     case ADD_CHAT_TAB:
       return state.concat(action.user)
+    case REMOVE_CHAT_TAB:
+      return state.filter(user => user !== action.user)
     default:
       return state
   }

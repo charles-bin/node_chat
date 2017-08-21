@@ -10,6 +10,7 @@ import {
   appendMessage,
   setCurrentTab,
   addChatTab,
+  removeChatTab,
   initUser,
 } from '../actions/index'
 import { createMessage, GENERAL_MESSAGE, PRIVATE_MESSAGE } from '../socketAPI'
@@ -21,7 +22,7 @@ class App extends Component {
     // Allows { dispatch, socket } = this.props
     this.handleSendMessage = this.handleSendMessage.bind(this)
     this.handleTabSelect = this.handleTabSelect.bind(this)
-    this.createItemClickHandler = this.createItemClickHandler.bind(this)
+    this.createToggleChatHandler = this.createToggleChatHandler.bind(this)
     this.initUsernameIfValid = this.initUsernameIfValid.bind(this)
   }
 
@@ -64,11 +65,20 @@ class App extends Component {
     dispatch(setCurrentTab(key))
   }
 
-  createItemClickHandler(user) {
-    const { dispatch } = this.props
+  createToggleChatHandler(user) {
+    const { dispatch, chats } = this.props
     return () => {
-      dispatch(addChatTab(user))
-      dispatch(setCurrentTab(user))
+      const index = chats.indexOf(user)
+      if (index === -1) {
+        dispatch(addChatTab(user))
+        dispatch(setCurrentTab(user))
+      } else if (index === 0) {
+        dispatch(removeChatTab(user))
+        dispatch(setCurrentTab('General'))
+      } else {
+        dispatch(removeChatTab(user))
+        dispatch(setCurrentTab(chats[index-1]))
+      }
     }
   }
 
@@ -132,8 +142,9 @@ class App extends Component {
         >
           <Panel id="user-list">
             <Users
+              chats={chats}
               userList={userList}
-              createItemClickHandler={this.createItemClickHandler}
+              createToggleChatHandler={this.createToggleChatHandler}
             />
           </Panel>
         </Col>

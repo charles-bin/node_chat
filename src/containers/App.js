@@ -6,7 +6,12 @@ import Messages from '../components/Messages'
 import Input from '../components/Input'
 import Username from '../components/Username'
 import Users from '../components/Users'
-import { appendMessage, setCurrentTab, addChatTab } from '../actions/index'
+import {
+  appendMessage,
+  setCurrentTab,
+  addChatTab,
+  initUser,
+} from '../actions/index'
 import { createMessage, GENERAL_MESSAGE, PRIVATE_MESSAGE } from '../socketAPI'
 import { Panel, Grid, Row, Col, Tab, Tabs } from 'react-bootstrap'
 
@@ -17,6 +22,7 @@ class App extends Component {
     this.handleSendMessage = this.handleSendMessage.bind(this)
     this.handleTabSelect = this.handleTabSelect.bind(this)
     this.createItemClickHandler = this.createItemClickHandler.bind(this)
+    this.initUsernameIfValid = this.initUsernameIfValid.bind(this)
   }
 
   componentDidMount() {
@@ -32,11 +38,6 @@ class App extends Component {
     tabContent.scrollTop = tabContent.scrollHeight;
 
     if (this.inputElement !== null) {
-      /*
-        Must use arrow function here because a regular function's "this" will
-        get bound to the window object upon execution. The arrow function's
-        "this" will get bound to enclosing App object with the inputElement.
-      */
       window.setTimeout(() => {
         this.inputElement.focus()
       }, 200)
@@ -71,12 +72,19 @@ class App extends Component {
     }
   }
 
+  initUsernameIfValid(username) {
+    if (username.length <= 20 && !username.match(/^\s*$/)) {
+      const { dispatch } = this.props
+      dispatch(initUser(username))
+    }
+  }
+
   render() {
     console.log("App.render")
-    const { dispatch, messages, username, userList, chats, currentTab } = this.props
+    const { messages, username, userList, chats, currentTab } = this.props
     return (
       <Grid>
-        <Username dispatch={dispatch} username={username} />
+        <Username username={username} initUsernameIfValid={this.initUsernameIfValid} />
         <Col
           lg={7} lgOffset={2}
           md={7} mdOffset={1}

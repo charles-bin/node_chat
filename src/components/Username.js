@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Modal, Button, FormGroup, FormControl, HelpBlock } from 'react-bootstrap'
-import { initUser } from '../actions/index'
 
 export default class Username extends Component {
 
@@ -20,19 +19,12 @@ export default class Username extends Component {
 
   handleEnterUsername(e) {
     if (e.key === 'Enter') {
-      this.validateUsername(e.target.value)
+      this.props.initUsernameIfValid(e.target.value)
     }
   }
 
   handleSubmitUsername() {
-    this.validateUsername(this.state.input)
-  }
-
-  validateUsername(username) {
-    if (username.length <= 20 && !username.match(/^\s*$/)) {
-      const { dispatch } = this.props
-      dispatch(initUser(username))
-    }
+    this.props.initUsernameIfValid(this.state.input)
   }
 
   handleInputChange(e) {

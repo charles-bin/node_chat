@@ -3,7 +3,10 @@ const GENERAL_MESSAGE = api.GENERAL_MESSAGE
 const PRIVATE_MESSAGE = api.PRIVATE_MESSAGE
 const SERVER_MESSAGE = api.SERVER_MESSAGE
 const USERLIST_UPDATE = api.USERLIST_UPDATE
+const USERNAME_REQUEST = api.USERNAME_REQUEST
+const USERNAME_RESPONSE = api.USERNAME_RESPONSE
 const createMessage = api.createMessage
+const createUsernameResponse = api.createUsernameResponse
 
 const express = require('express')
 const morgan = require('morgan')
@@ -36,23 +39,35 @@ var userList = {}
 var io = require('socket.io').listen(server)
 
 io.on('connection', (socket) => {
-  const user = socket.handshake.query.username
-  userList[user] = socket
-  console.log(user + ' has connected')
+  console.log('new socket connection')
 
-  io.emit(SERVER_MESSAGE, createMessage(user, user + " has connected", SERVER_MESSAGE))
-  io.emit(USERLIST_UPDATE, Object.keys(userList))
+  socket.on(USERNAME_REQUEST, (username) => {
+    if (username === 'General') {
+      socket.emit(USERNAME_RESPONSE,
+        createUsernameResponse(username, false, username + " is not available")
+      )
+    } else {
+      socket.emit(USERNAME_RESPONSE,
+        createUsernameResponse(username, true)
+      )
+      userList[username] = socket
+      io.emit(SERVER_MESSAGE,
+        createMessage(username, username + " has connected", SERVER_MESSAGE)
+      )
+      io.emit(USERLIST_UPDATE, Object.keys(userList))
+
+      socket.on('disconnect', () => {
+        delete userList[username]
+        console.log(username + ' has disconnected')
+
+        io.emit(SERVER_MESSAGE, createMessage(username, username + " has disconnected", SERVER_MESSAGE))
+        io.emit(USERLIST_UPDATE, Object.keys(userList))
+      })
+    }
+  })
 
   socket.on(GENERAL_MESSAGE, (message) => {
     console.log(message)
     socket.broadcast.emit(GENERAL_MESSAGE, message)
-  })
-
-  socket.on('disconnect', () => {
-    delete userList[user]
-    console.log(user + ' has disconnected')
-
-    io.emit(SERVER_MESSAGE, createMessage(user, user + " has disconnected", SERVER_MESSAGE))
-    io.emit(USERLIST_UPDATE, Object.keys(userList))
   })
 })

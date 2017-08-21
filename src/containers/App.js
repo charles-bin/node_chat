@@ -7,13 +7,18 @@ import Input from '../components/Input'
 import Username from '../components/Username'
 import Users from '../components/Users'
 import {
+  initSocket,
   appendMessage,
   setCurrentTab,
   addChatTab,
   removeChatTab,
-  initUser,
 } from '../actions/index'
-import { createMessage, GENERAL_MESSAGE, PRIVATE_MESSAGE } from '../socketAPI'
+import {
+  createMessage,
+  GENERAL_MESSAGE,
+  PRIVATE_MESSAGE,
+  USERNAME_REQUEST,
+} from '../socketAPI'
 import { Panel, Grid, Row, Col, Tab, Tabs } from 'react-bootstrap'
 
 class App extends Component {
@@ -23,22 +28,23 @@ class App extends Component {
     this.handleSendMessage = this.handleSendMessage.bind(this)
     this.handleTabSelect = this.handleTabSelect.bind(this)
     this.createToggleChatHandler = this.createToggleChatHandler.bind(this)
-    this.initUsernameIfValid = this.initUsernameIfValid.bind(this)
+    this.requestUsernameIfValid = this.requestUsernameIfValid.bind(this)
   }
 
   componentDidMount() {
-    //const { dispatch, username } = this.props
+    const { dispatch } = this.props
     console.log('App.componentDidMount')
+    dispatch(initSocket())
   }
 
   componentDidUpdate() {
     console.log('App.componentDidUpdate')
-
+    const { username } = this.props
     const messageTabs = document.getElementById("message-tabs")
     const tabContent = messageTabs.getElementsByClassName("tab-content")[0]
     tabContent.scrollTop = tabContent.scrollHeight;
 
-    if (this.inputElement !== null) {
+    if (this.inputElement !== null && username !== '') {
       window.setTimeout(() => {
         this.inputElement.focus()
       }, 200)
@@ -82,19 +88,35 @@ class App extends Component {
     }
   }
 
-  initUsernameIfValid(username) {
+  requestUsernameIfValid(username) {
     if (username.length <= 20 && !username.match(/^\s*$/)) {
-      const { dispatch } = this.props
-      dispatch(initUser(username))
+      const { socket } = this.props
+      if (socket) {
+        socket.emit(USERNAME_REQUEST, username)
+      }
     }
   }
 
   render() {
     console.log("App.render")
-    const { messages, username, userList, chats, currentTab } = this.props
+    const {
+      dispatch,
+      messages,
+      username,
+      usernameFeedback,
+      userList,
+      chats,
+      currentTab
+    } = this.props
+
     return (
       <Grid>
-        <Username username={username} initUsernameIfValid={this.initUsernameIfValid} />
+        <Username
+          dispatch={dispatch}
+          username={username}
+          usernameFeedback={usernameFeedback}
+          requestUsernameIfValid={this.requestUsernameIfValid}
+        />
         <Col
           lg={7} lgOffset={2}
           md={7} mdOffset={1}
@@ -155,7 +177,7 @@ class App extends Component {
 
 App.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  socket: PropTypes.object.isRequired,
+  socket: PropTypes.object,
   messages: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
   userList: PropTypes.array.isRequired,
@@ -171,6 +193,7 @@ function mapStateToProps(state) {
     receiveSocket,
     receiveMessage,
     username,
+    usernameFeedback,
     userList,
     chats,
     currentTab,
@@ -180,6 +203,7 @@ function mapStateToProps(state) {
     socket: receiveSocket,
     messages: receiveMessage,
     username,
+    usernameFeedback,
     userList,
     chats,
     currentTab,

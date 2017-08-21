@@ -1,6 +1,6 @@
 import React from 'react'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
-import { GENERAL_MESSAGE, PRIVATE_MESSAGE, SERVER_MESSAGE } from '../socketAPI'
+import { SERVER_MESSAGE } from '../socketAPI'
 
 const listStyle = {
   'background': '#f5f5f5',

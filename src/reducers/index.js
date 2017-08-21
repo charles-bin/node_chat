@@ -4,13 +4,14 @@ import {
   REGISTER_SOCKET,
   APPEND_MESSAGE,
   SET_USERNAME,
+  SET_USERNAME_FEEDBACK,
   SET_USERLIST,
   SET_CURRENT_TAB,
   ADD_CHAT_TAB,
   REMOVE_CHAT_TAB,
 } from '../actions/index'
 
-function receiveSocket(state={}, action) {
+function receiveSocket(state=null, action) {
   switch (action.type) {
     case REGISTER_SOCKET:
       return action.socket
@@ -32,6 +33,15 @@ function username(state='', action) {
   switch (action.type) {
     case SET_USERNAME:
       return action.username
+    default:
+      return state
+  }
+}
+
+function usernameFeedback(state='', action) {
+  switch (action.type) {
+    case SET_USERNAME_FEEDBACK:
+      return action.feedback
     default:
       return state
   }
@@ -70,6 +80,7 @@ const rootReducer = combineReducers({
   receiveSocket,
   receiveMessage,
   username,
+  usernameFeedback,
   userList,
   chats,
   currentTab,

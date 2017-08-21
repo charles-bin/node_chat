@@ -1,8 +1,3 @@
-const GENERAL_MESSAGE = 'GENERAL_MESSAGE'
-const PRIVATE_MESSAGE = 'PRIVATE_MESSAGE'
-const SERVER_MESSAGE = 'SERVER_MESSAGE'
-const USERLIST_UPDATE = 'USERLIST_UPDATE'
-
 function createMessage(from, body, messageType, to) {
   return {
     from,
@@ -15,8 +10,20 @@ function createMessage(from, body, messageType, to) {
   }
 }
 
-module.exports.GENERAL_MESSAGE = GENERAL_MESSAGE
-module.exports.PRIVATE_MESSAGE = PRIVATE_MESSAGE
-module.exports.SERVER_MESSAGE = SERVER_MESSAGE
-module.exports.USERLIST_UPDATE = USERLIST_UPDATE
+function createUsernameResponse(username, approved, feedback) {
+  return {
+    username,
+    approved,
+    feedback,
+  }
+}
+
+module.exports.GENERAL_MESSAGE = 'GENERAL_MESSAGE'
+module.exports.PRIVATE_MESSAGE = 'PRIVATE_MESSAGE'
+module.exports.SERVER_MESSAGE = 'SERVER_MESSAGE'
+module.exports.USERLIST_UPDATE = 'USERLIST_UPDATE'
+module.exports.USERNAME_REQUEST = 'USERNAME_REQUEST'
+module.exports.USERNAME_RESPONSE = 'USERNAME_RESPONSE'
+
 module.exports.createMessage = createMessage
+module.exports.createUsernameResponse = createUsernameResponse

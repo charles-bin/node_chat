@@ -3,25 +3,23 @@ import {
   PRIVATE_MESSAGE,
   SERVER_MESSAGE,
   USERLIST_UPDATE,
+  USERNAME_RESPONSE,
   createMessage,
 } from '../socketAPI'
 
 export const REGISTER_SOCKET = 'REGISTER_SOCKET'
 export const APPEND_MESSAGE = 'APPEND_MESSAGE'
 export const SET_USERNAME = 'SET_USERNAME'
+export const SET_USERNAME_FEEDBACK = 'SET_USERNAME_FEEDBACK'
 export const SET_USERLIST = 'SET_USERLIST'
 export const SET_CURRENT_TAB = 'SET_CURRENT_TAB'
 export const ADD_CHAT_TAB = 'ADD_CHAT_TAB'
 export const REMOVE_CHAT_TAB = 'REMOVE_CHAT_TAB'
 
-export function initSocket(username) {
+export function initSocket() {
   return dispatch => {
     const io = require('socket.io-client')
-    const socket = io({
-      query: {
-        username
-      }
-    })
+    const socket = io()
     dispatch(registerSocket(socket))
 
     socket.on(GENERAL_MESSAGE, (message) => {
@@ -34,6 +32,15 @@ export function initSocket(username) {
 
     socket.on(USERLIST_UPDATE, (userList) => {
       dispatch(setUserList(userList))
+    })
+
+    socket.on(USERNAME_RESPONSE, (response) => {
+      const { username, approved, feedback } = response
+      if (approved) {
+        dispatch(setUsername(username))
+      } else {
+        dispatch(setUsernameFeedback(feedback))
+      }
     })
   }
 }
@@ -52,17 +59,17 @@ export function appendMessage(message) {
   }
 }
 
-export function initUser(username) {
-  return dispatch => {
-    dispatch(initSocket(username))
-    dispatch(setUsername(username))
-  }
-}
-
 function setUsername(username) {
   return {
     type: SET_USERNAME,
     username
+  }
+}
+
+export function setUsernameFeedback(feedback) {
+  return {
+    type: SET_USERNAME_FEEDBACK,
+    feedback
   }
 }
 

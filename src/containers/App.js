@@ -164,6 +164,7 @@ class App extends Component {
         >
           <Panel id="user-list">
             <Users
+              username={username}
               chats={chats}
               userList={userList}
               createToggleChatHandler={this.createToggleChatHandler}

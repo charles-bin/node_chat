@@ -7,7 +7,7 @@ const listStyle = {
 }
 
 export default function Users(props) {
-  const { chats, userList, createToggleChatHandler } = props
+  const { username, chats, userList, createToggleChatHandler } = props
   const orderedUserList = chats.concat(userList.filter(user => chats.indexOf(user) === -1))
   return (
     <div>
@@ -19,7 +19,7 @@ export default function Users(props) {
             <ListGroupItem
               key={i}
               style={listStyle}
-              onClick={handleItemClick}>
+              onClick={ username !== user && handleItemClick}>
               { user}
               { chats.indexOf(user) !== -1 && <span> <Glyphicon glyph="comment" /></span> }
             </ListGroupItem>

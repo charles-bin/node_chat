@@ -42,7 +42,9 @@ io.on('connection', (socket) => {
   console.log('new socket connection')
 
   socket.on(USERNAME_REQUEST, (username) => {
-    if (username === 'General') {
+    if (Object.keys(userList).map(key => userList[key]).indexOf(socket) !== -1) {
+      console.log("Socket has already been registered to " + username)
+    } else if (Object.keys(userList).indexOf(username) !== -1 || username === 'General') {
       socket.emit(USERNAME_RESPONSE,
         createUsernameResponse(username, false, username + " is not available")
       )

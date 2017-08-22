@@ -8,7 +8,8 @@ import Username from '../components/Username'
 import Users from '../components/Users'
 import {
   initSocket,
-  appendMessage,
+  appendGeneralMessage,
+  appendPrivateMessage,
   setCurrentTab,
   addChatTab,
   removeChatTab,
@@ -60,7 +61,9 @@ class App extends Component {
           ? createMessage(username, e.target.value, GENERAL_MESSAGE)
           : createMessage(username, e.target.value, PRIVATE_MESSAGE, currentTab)
       )
-      dispatch(appendMessage(message))
+      currentTab === 'General'
+        ? dispatch(appendGeneralMessage(message))
+        : dispatch(appendPrivateMessage(message, username))
       socket.emit(currentTab === 'General' ? GENERAL_MESSAGE : PRIVATE_MESSAGE, message)
       e.target.value = ""
     }
@@ -128,14 +131,15 @@ class App extends Component {
             <Row id="chat-display">
               <Tabs activeKey={currentTab} onSelect={this.handleTabSelect} id="message-tabs">
                 <Tab key="General" eventKey="General" title="General">
-                  <Messages messages={messages} />
+                  <Messages messages={messages.General} />
                 </Tab>
                 { chatTabs.map((user, i) => {
                   return (
                     <Tab key={user} eventKey={user} title={user}>
                       <Messages messages={
-                        messages.filter(
-                          m => m.to === user || (m.from === user && m.to === username))
+                        Object.keys(messages).indexOf(currentTab) !== -1
+                          ? messages[currentTab]
+                          : []
                       } />
                     </Tab>
                   )
@@ -179,7 +183,7 @@ class App extends Component {
 App.propTypes = {
   dispatch: PropTypes.func.isRequired,
   socket: PropTypes.object,
-  messages: PropTypes.array.isRequired,
+  messages: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
   userList: PropTypes.array.isRequired,
   chatTabs: PropTypes.array.isRequired,

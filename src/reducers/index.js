@@ -2,7 +2,8 @@ import { combineReducers } from 'redux'
 
 import {
   REGISTER_SOCKET,
-  APPEND_MESSAGE,
+  APPEND_GENERAL_MESSAGE,
+  APPEND_PRIVATE_MESSAGE,
   SET_USERNAME,
   SET_USERNAME_FEEDBACK,
   SET_USERLIST,
@@ -20,10 +21,24 @@ function receiveSocket(state=null, action) {
   }
 }
 
-function receiveMessage(state=[], action) {
+function receiveMessage(state={General: []}, action) {
+  const message = action.message
   switch (action.type) {
-    case APPEND_MESSAGE:
-      return state.concat(action.message)
+    case APPEND_GENERAL_MESSAGE:
+      return Object.assign({}, state, {
+        General: state.General.concat(message)
+      })
+    case APPEND_PRIVATE_MESSAGE:
+      const key = action.username === message.from ? message.to : message.from
+      if (Object.keys(state).indexOf(key) === -1) {
+        return Object.assign({}, state, {
+          [key]: [message]
+        })
+      } else {
+        return Object.assign({}, state, {
+          [key]: state[key].concat(message)
+        })
+      }
     default:
       return state
   }

@@ -8,7 +8,8 @@ import {
 } from '../socketAPI'
 
 export const REGISTER_SOCKET = 'REGISTER_SOCKET'
-export const APPEND_MESSAGE = 'APPEND_MESSAGE'
+export const APPEND_GENERAL_MESSAGE = 'APPEND_GENERAL_MESSAGE'
+export const APPEND_PRIVATE_MESSAGE = 'APPEND_PRIVATE_MESSAGE'
 export const SET_USERNAME = 'SET_USERNAME'
 export const SET_USERNAME_FEEDBACK = 'SET_USERNAME_FEEDBACK'
 export const SET_USERLIST = 'SET_USERLIST'
@@ -23,11 +24,16 @@ export function initSocket() {
     dispatch(registerSocket(socket))
 
     socket.on(GENERAL_MESSAGE, (message) => {
-      dispatch(appendMessage(message))
+      dispatch(appendGeneralMessage(message))
+    })
+
+    socket.on(PRIVATE_MESSAGE, (message) => {
+      dispatch(appendPrivateMessage(message, message.to))
+      dispatch(addChatTab(message.from))
     })
 
     socket.on(SERVER_MESSAGE, (message) => {
-      dispatch(appendMessage(message))
+      dispatch(appendGeneralMessage(message))
     })
 
     socket.on(USERLIST_UPDATE, (userList) => {
@@ -52,10 +58,18 @@ function registerSocket(socket) {
   }
 }
 
-export function appendMessage(message) {
+export function appendGeneralMessage(message) {
   return {
-    type: APPEND_MESSAGE,
+    type: APPEND_GENERAL_MESSAGE,
     message,
+  }
+}
+
+export function appendPrivateMessage(message, username) {
+  return {
+    type: APPEND_PRIVATE_MESSAGE,
+    message,
+    username,
   }
 }
 

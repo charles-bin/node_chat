@@ -72,4 +72,9 @@ io.on('connection', (socket) => {
     console.log(message)
     socket.broadcast.emit(GENERAL_MESSAGE, message)
   })
+
+  socket.on(PRIVATE_MESSAGE, (message) => {
+    console.log(message)
+    userList[message.to].emit(PRIVATE_MESSAGE, message)
+  })
 })

@@ -56,7 +56,7 @@ function userList(state=[], action) {
   }
 }
 
-function chats(state=[], action) {
+function chatTabs(state=[], action) {
   switch (action.type) {
     case ADD_CHAT_TAB:
       return state.concat(action.user)
@@ -82,7 +82,7 @@ const rootReducer = combineReducers({
   username,
   usernameFeedback,
   userList,
-  chats,
+  chatTabs,
   currentTab,
 })
 

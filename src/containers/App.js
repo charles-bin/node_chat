@@ -72,9 +72,9 @@ class App extends Component {
   }
 
   createToggleChatHandler(user) {
-    const { dispatch, chats } = this.props
+    const { dispatch, chatTabs } = this.props
     return () => {
-      const index = chats.indexOf(user)
+      const index = chatTabs.indexOf(user)
       if (index === -1) {
         dispatch(addChatTab(user))
         dispatch(setCurrentTab(user))
@@ -83,7 +83,7 @@ class App extends Component {
         dispatch(setCurrentTab('General'))
       } else {
         dispatch(removeChatTab(user))
-        dispatch(setCurrentTab(chats[index-1]))
+        dispatch(setCurrentTab(chatTabs[index-1]))
       }
     }
   }
@@ -105,7 +105,7 @@ class App extends Component {
       username,
       usernameFeedback,
       userList,
-      chats,
+      chatTabs,
       currentTab
     } = this.props
 
@@ -130,7 +130,7 @@ class App extends Component {
                 <Tab key="General" eventKey="General" title="General">
                   <Messages messages={messages} />
                 </Tab>
-                { chats.map((user, i) => {
+                { chatTabs.map((user, i) => {
                   return (
                     <Tab key={user} eventKey={user} title={user}>
                       <Messages messages={
@@ -165,7 +165,7 @@ class App extends Component {
           <Panel id="user-list">
             <Users
               username={username}
-              chats={chats}
+              chatTabs={chatTabs}
               userList={userList}
               createToggleChatHandler={this.createToggleChatHandler}
             />
@@ -182,7 +182,7 @@ App.propTypes = {
   messages: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
   userList: PropTypes.array.isRequired,
-  chats: PropTypes.array.isRequired,
+  chatTabs: PropTypes.array.isRequired,
   currentTab: PropTypes.string.isRequired,
 }
 
@@ -196,7 +196,7 @@ function mapStateToProps(state) {
     username,
     usernameFeedback,
     userList,
-    chats,
+    chatTabs,
     currentTab,
   } = state
 
@@ -206,7 +206,7 @@ function mapStateToProps(state) {
     username,
     usernameFeedback,
     userList,
-    chats,
+    chatTabs,
     currentTab,
   }
 }

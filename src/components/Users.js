@@ -7,8 +7,13 @@ const listStyle = {
 }
 
 export default function Users(props) {
-  const { username, chats, userList, createToggleChatHandler } = props
-  const orderedUserList = chats.concat(userList.filter(user => chats.indexOf(user) === -1))
+  const { username, chatTabs, userList, createToggleChatHandler } = props
+  const orderedUserList = userList.filter(
+    user => chatTabs.indexOf(user) !== -1
+  ).concat(userList.filter(
+    user => chatTabs.indexOf(user) === -1)
+  )
+
   return (
     <div>
       <h4 style={{'whiteSpace': 'nowrap'}}>Online Users <Badge>{userList.length}</Badge></h4>
@@ -21,7 +26,7 @@ export default function Users(props) {
               style={listStyle}
               onClick={ username !== user && handleItemClick}>
               { user}
-              { chats.indexOf(user) !== -1 && <span> <Glyphicon glyph="comment" /></span> }
+              { chatTabs.indexOf(user) !== -1 && <span> <Glyphicon glyph="comment" /></span> }
             </ListGroupItem>
           )
         })}

@@ -6,6 +6,17 @@ const listStyle = {
   'marginBottom': '1px',
 }
 
+const groupStyle = {
+  'height': '88%',
+  'overflow': 'auto',
+  'overflowWrap': 'break-word',
+  'marginTop': '15%',
+}
+
+const divStyle = {
+  'height': '100%',
+}
+
 export default function Users(props) {
   const { username, chatTabs, userList, createToggleChatHandler } = props
   const orderedUserList = userList.filter(
@@ -14,16 +25,16 @@ export default function Users(props) {
     user => chatTabs.indexOf(user) === -1)
   )
   return (
-    <div>
+    <div style={divStyle}>
       <h4 style={{'whiteSpace': 'nowrap'}}>Online Users <Badge>{userList.length}</Badge></h4>
-      <ListGroup>
+      <ListGroup style={groupStyle}>
         { orderedUserList.map((user, i) => {
           const handleItemClick = createToggleChatHandler(user)
           return (
             <ListGroupItem
               key={i}
-              style={listStyle}
-              onClick={ username !== user && handleItemClick}>
+              style={ i > 0 ? listStyle : Object.assign({}, listStyle, {'paddingTop': 0}) }
+              onClick={ username !== user ? handleItemClick : null }>
               { user}
               { chatTabs.indexOf(user) !== -1 && <span> <Glyphicon glyph="comment" /></span> }
             </ListGroupItem>

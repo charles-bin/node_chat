@@ -4,7 +4,6 @@ import {
   SERVER_MESSAGE,
   USERLIST_UPDATE,
   USERNAME_RESPONSE,
-  createMessage,
 } from '../socketAPI'
 
 export const REGISTER_SOCKET = 'REGISTER_SOCKET'

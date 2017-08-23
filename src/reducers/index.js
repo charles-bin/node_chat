@@ -74,7 +74,11 @@ function userList(state=[], action) {
 function chatTabs(state=[], action) {
   switch (action.type) {
     case ADD_CHAT_TAB:
-      return state.concat(action.user)
+      if (state.indexOf(action.user) === -1) {
+        return state.concat(action.user)
+      } else {
+        return state
+      }
     case REMOVE_CHAT_TAB:
       return state.filter(user => user !== action.user)
     default:

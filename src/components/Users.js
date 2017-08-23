@@ -2,8 +2,8 @@ import React from 'react'
 import { Badge, Glyphicon, ListGroup, ListGroupItem } from 'react-bootstrap'
 
 const listStyle = {
-  'border-style': 'none',
-  'margin-bottom': '1px',
+  'borderStyle': 'none',
+  'marginBottom': '1px',
 }
 
 export default function Users(props) {
@@ -13,7 +13,6 @@ export default function Users(props) {
   ).concat(userList.filter(
     user => chatTabs.indexOf(user) === -1)
   )
-
   return (
     <div>
       <h4 style={{'whiteSpace': 'nowrap'}}>Online Users <Badge>{userList.length}</Badge></h4>

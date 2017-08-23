@@ -75,18 +75,17 @@ class App extends Component {
   }
 
   createToggleChatHandler(user) {
-    const { dispatch, chatTabs } = this.props
+    const { dispatch, chatTabs, currentTab } = this.props
     return () => {
       const index = chatTabs.indexOf(user)
       if (index === -1) {
         dispatch(addChatTab(user))
         dispatch(setCurrentTab(user))
-      } else if (index === 0) {
-        dispatch(removeChatTab(user))
-        dispatch(setCurrentTab('General'))
+      } else if (currentTab !== user) {
+        dispatch(setCurrentTab(user))
       } else {
         dispatch(removeChatTab(user))
-        dispatch(setCurrentTab(chatTabs[index-1]))
+        dispatch(setCurrentTab(index === 0 ? 'General' : chatTabs[index-1]))
       }
     }
   }

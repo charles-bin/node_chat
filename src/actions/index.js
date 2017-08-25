@@ -27,8 +27,8 @@ export function initSocket() {
     })
 
     socket.on(PRIVATE_MESSAGE, (message) => {
-      dispatch(appendPrivateMessage(message, message.to))
       dispatch(addChatTab(message.from))
+      dispatch(appendPrivateMessage(message, message.to))
     })
 
     socket.on(SERVER_MESSAGE, (message) => {

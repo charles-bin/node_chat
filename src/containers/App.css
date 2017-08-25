@@ -30,16 +30,16 @@ html, body, #root, .container, .panel-body {
 
 #message-tabs {
   height: 100%;
-  margin-bottom: 0;
 }
 
 #message-tabs > * {
-  margin-top: 5px;
-  padding-right: 5px;
+  margin-top: 0px;
+  padding-right: 0px;
 }
 
 #message-tabs .tab-content {
   height: 88%;
   overflow: auto;
   overflow-wrap: break-word;
+  margin-top: 8px;
 }

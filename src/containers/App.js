@@ -20,7 +20,7 @@ import {
   PRIVATE_MESSAGE,
   USERNAME_REQUEST,
 } from '../socketAPI'
-import { Panel, Grid, Row, Col, Tab, Tabs } from 'react-bootstrap'
+import { Panel, Grid, Row, Col, Tab, Nav, NavItem, Badge } from 'react-bootstrap'
 
 class App extends Component {
   constructor(props) {
@@ -108,7 +108,8 @@ class App extends Component {
       usernameFeedback,
       userList,
       chatTabs,
-      currentTab
+      currentTab,
+      chatTabsUnread,
     } = this.props
 
     return (
@@ -128,22 +129,39 @@ class App extends Component {
         >
           <Panel>
             <Row id="chat-display">
-              <Tabs activeKey={currentTab} onSelect={this.handleTabSelect} id="message-tabs">
-                <Tab key="General" eventKey="General" title="General">
-                  <Messages messages={messages.General} />
-                </Tab>
-                { chatTabs.map((user, i) => {
-                  return (
-                    <Tab key={user} eventKey={user} title={user}>
-                      <Messages messages={
-                        Object.keys(messages).indexOf(currentTab) !== -1
-                          ? messages[currentTab]
-                          : []
-                      } />
-                    </Tab>
-                  )
-                })}
-              </Tabs>
+              <Tab.Container activeKey={currentTab} onSelect={this.handleTabSelect} id="message-tabs">
+                <div>
+                  <Nav bsStyle="tabs">
+                    <NavItem key="General" eventKey="General">General</NavItem>
+                    { chatTabs.map((user, i) => {
+                      return (
+                        <NavItem key={user} eventKey={user}>
+                          {user + " "}
+                          { chatTabsUnread[user] > 0 &&
+                            <Badge>{chatTabsUnread[user]}</Badge>
+                          }
+                        </NavItem>
+                      )
+                    })}
+                  </Nav>
+                  <Tab.Content>
+                    <Tab.Pane key="General" eventKey="General">
+                      <Messages messages={messages.General} />
+                    </Tab.Pane>
+                    { chatTabs.map((user, i) => {
+                      return (
+                        <Tab.Pane key={user} eventKey={user}>
+                          <Messages messages={
+                            Object.keys(messages).indexOf(currentTab) !== -1
+                              ? messages[currentTab]
+                              : []
+                          } />
+                        </Tab.Pane>
+                      )
+                    })}
+                  </Tab.Content>
+                </div>
+              </Tab.Container>
             </Row>
             <Row>
               <Col md={12}>
@@ -158,13 +176,8 @@ class App extends Component {
             </Row>
           </Panel>
         </Col>
-        <Col
-          lg={2}
-          md={3}
-          sm={3}
-          xs={3}
-          className="full-height"
-        >
+
+        <Col lg={2} md={3} sm={3} xs={3} className="full-height" >
           <Panel id="user-list">
             <Users
               username={username}
@@ -187,6 +200,7 @@ App.propTypes = {
   userList: PropTypes.array.isRequired,
   chatTabs: PropTypes.array.isRequired,
   currentTab: PropTypes.string.isRequired,
+  chatTabsUnread: PropTypes.object.isRequired,
 }
 
 /* By default, the entire state is provided to the AsyncApp component through the prop variable.
@@ -200,7 +214,6 @@ function mapStateToProps(state) {
     usernameFeedback,
     userList,
     chatTabs,
-    currentTab,
   } = state
 
   return {
@@ -209,8 +222,9 @@ function mapStateToProps(state) {
     username,
     usernameFeedback,
     userList,
-    chatTabs,
-    currentTab,
+    chatTabs: Object.keys(chatTabs.tabs),
+    currentTab: chatTabs.currentTab,
+    chatTabsUnread: chatTabs.tabs,
   }
 }
 

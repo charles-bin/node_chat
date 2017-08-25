@@ -29,6 +29,7 @@ function receiveMessage(state={General: []}, action) {
         General: state.General.concat(message)
       })
     case APPEND_PRIVATE_MESSAGE:
+      // action.username is the username of the client
       const key = action.username === message.from ? message.to : message.from
       if (Object.keys(state).indexOf(key) === -1) {
         return Object.assign({}, state, {
@@ -71,25 +72,35 @@ function userList(state=[], action) {
   }
 }
 
-function chatTabs(state=[], action) {
+function chatTabs(state={tabs: {}, currentTab: "General"}, action) {
   switch (action.type) {
     case ADD_CHAT_TAB:
-      if (state.indexOf(action.user) === -1) {
-        return state.concat(action.user)
+      if (Object.keys(state.tabs).indexOf(action.user) === -1) {
+        return {...state, tabs: {...state.tabs, [action.user]: 0}}
       } else {
         return state
       }
     case REMOVE_CHAT_TAB:
-      return state.filter(user => user !== action.user)
-    default:
-      return state
-  }
-}
-
-function currentTab(state='General', action) {
-  switch (action.type) {
+      const filteredTabs = Object.keys(state.tabs).filter(
+        user => user !== action.user
+      ).reduce((obj, key) => {
+        obj[key] = state.tabs[key]
+        return obj
+      }, {})
+      return {...state, tabs: {...filteredTabs}}
+    case APPEND_PRIVATE_MESSAGE:
+      const message = action.message
+      if (action.username === message.to && message.from !== state.currentTab) {
+        return {...state, tabs: {...state.tabs, [message.from]: state.tabs[message.from] + 1}}
+      } else {
+        return state
+      }
     case SET_CURRENT_TAB:
-      return action.key
+      if (action.key === "General") {
+        return {...state, currentTab: action.key}
+      } else {
+        return {...state, tabs: {...state.tabs, [action.key]: 0}, currentTab: action.key}
+      }
     default:
       return state
   }
@@ -102,7 +113,6 @@ const rootReducer = combineReducers({
   usernameFeedback,
   userList,
   chatTabs,
-  currentTab,
 })
 
 export default rootReducer

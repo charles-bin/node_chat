@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Modal, Button, FormGroup, FormControl, HelpBlock } from 'react-bootstrap'
 import { setUsernameFeedback } from '../actions/index'
 
@@ -13,7 +14,7 @@ export default class Username extends Component {
   }
 
   componentDidMount() {
-    if (this.inputElement !== null) {
+    if (this.inputElement != null) {
       this.inputElement.focus()
     }
   }
@@ -39,9 +40,9 @@ export default class Username extends Component {
   }
 
   render() {
-    const { username, usernameFeedback } = this.props
+    const { showModal, username, usernameFeedback } = this.props
     return (
-      <Modal bsSize="small" show={username === ''}>
+      <Modal bsSize="small" show={showModal}>
         <Modal.Header>
           <Modal.Title>Enter Username</Modal.Title>
         </Modal.Header>
@@ -72,4 +73,20 @@ export default class Username extends Component {
       </Modal>
     )
   }
+}
+
+Username.propTypes = {
+  showModal: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  usernameFeedback: PropTypes.string.isRequired,
+  requestUsernameIfValid: PropTypes.func.isRequired,
+}
+
+Username.defaultProps = {
+  showModal: false,
+  dispatch: () => {},
+  username: '',
+  usernameFeedback: '',
+  requestUsernameIfValid: () => {},
 }

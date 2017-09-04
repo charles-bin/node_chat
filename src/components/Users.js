@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Badge, Glyphicon, ListGroup, ListGroupItem } from 'react-bootstrap'
 
 const listItemStyle = {
@@ -49,4 +50,18 @@ export default function Users(props) {
       </ListGroup>
     </div>
   )
+}
+
+Users.propTypes = {
+  username: PropTypes.string.isRequired,
+  chatTabs: PropTypes.array.isRequired,
+  userList: PropTypes.array.isRequired,
+  createToggleChatHandler: PropTypes.func.isRequired,
+}
+
+Users.defaultProps = {
+  username: '',
+  chatTabs: [],
+  userList: [],
+  createToggleChatHandler: () => {},
 }

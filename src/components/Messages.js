@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { SERVER_MESSAGE } from '../socketAPI'
 
@@ -20,4 +21,12 @@ export default function Messages(props) {
       })}
     </ListGroup>
   )
+}
+
+Messages.propTypes = {
+  messages: PropTypes.array.isRequired,
+}
+
+Messages.defaultProps = {
+  messages: [],
 }

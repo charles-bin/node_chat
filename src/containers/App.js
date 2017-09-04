@@ -36,6 +36,10 @@ class App extends Component {
     const { dispatch } = this.props
     console.log('App.componentDidMount')
     dispatch(initSocket())
+
+    // Debugging
+    //window.store.dispatch({type:'SET_USERNAME',username:'cbin'})
+    //window.store.dispatch({type:'SET_USERLIST',userList:Array(14).fill('roger')})
   }
 
   componentDidUpdate() {
@@ -115,6 +119,7 @@ class App extends Component {
     return (
       <Grid>
         <Username
+          showModal={username === ''}
           dispatch={dispatch}
           username={username}
           usernameFeedback={usernameFeedback}

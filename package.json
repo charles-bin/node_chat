@@ -18,10 +18,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom --coverage",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test --env=jsdom --coverage --watch",
+    "eject": "react-scripts eject",
+    "babel": "babel-node"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "enzyme": "^2.9.1",
     "react-test-renderer": "^15.6.1",
     "redux-test-utils": "^0.1.2"

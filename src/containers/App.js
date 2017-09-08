@@ -34,7 +34,6 @@ class App extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props
-    console.log('App.componentDidMount')
     dispatch(initSocket())
 
     // Debugging
@@ -43,7 +42,6 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    console.log('App.componentDidUpdate')
     const { username } = this.props
     const messageTabs = document.getElementById("message-tabs")
     const tabContent = messageTabs.getElementsByClassName("tab-content")[0]
@@ -104,7 +102,6 @@ class App extends Component {
   }
 
   render() {
-    console.log("App.render")
     const {
       dispatch,
       messages,
@@ -202,6 +199,7 @@ App.propTypes = {
   socket: PropTypes.object,
   messages: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
+  usernameFeedback: PropTypes.string.isRequired,
   userList: PropTypes.array.isRequired,
   chatTabs: PropTypes.array.isRequired,
   currentTab: PropTypes.string.isRequired,
